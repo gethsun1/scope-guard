@@ -1,0 +1,2 @@
+{"id":"engageflow","name":"EngageFlow","repository_path":"/workspace/projects/engageflow","service":"engageflow-api","database":"engageflow","port":8201,"domain":"api.engageflow.test","health_endpoint":"/health","protected":true}
+

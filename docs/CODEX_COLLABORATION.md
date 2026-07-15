@@ -31,3 +31,20 @@ not occur.
 - Related commit: `feat: scaffold control plane monorepo`.
 - Tests: Ruff passed; ESLint passed; strict TypeScript passed; Next.js production build
   passed; Compose configuration passed; API and web containers both reached healthy state.
+
+## 2026-07-16 — Phase 2: synthetic shared server
+
+- Prompt: continue with the isolated Docker demonstration; never substitute host execution.
+- Codex work: created independent RD Social and EngageFlow health services and a restricted
+  runner that accepts only six predefined state operations. Added non-root image-owned
+  volume initialization, internal-only networking, read-only roots, dropped capabilities,
+  resource limits, baseline inventory, and deterministic reset.
+- Review/corrections: initial named-volume seeding failed under UID 10001. Replaced bind-copy
+  initialization with Docker volume copy-up from a non-root-owned initializer image; no
+  elevation or host mount was introduced.
+- Human decisions: required Docker as a hard dependency for the signature demonstration.
+- Related commit: `feat: add synthetic shared-server environment`.
+- Tests: all three long-running demo containers reached healthy state; the runner blocked an
+  unknown EngageFlow restart with HTTP 403; deploy, migration, deliberate failure, and
+  rollback executed in-container; EngageFlow retained the same SHA-256 hash and healthy
+  state throughout; RD Social returned exactly to its pre-mutation hash after rollback.

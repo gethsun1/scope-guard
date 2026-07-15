@@ -1,0 +1,69 @@
+name: scope-guard-demo
+services:
+  init:
+    build: {context: .., dockerfile: demo/scripts/Dockerfile.init}
+    user: "10001:10001"
+    command: ["true"]
+    volumes:
+      - demo-state:/state
+      - demo-workspace:/workspace/projects
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+  rdsocial-api:
+    build: {context: .., dockerfile: demo/projects/rdsocial/Dockerfile}
+    environment: {PORT: "8101"}
+    volumes: [demo-state:/state:ro]
+    depends_on: {init: {condition: service_completed_successfully}}
+    networks: [sandbox]
+    read_only: true
+    tmpfs: [/tmp]
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    mem_limit: 64m
+    cpus: 0.25
+    healthcheck:
+      test: [CMD, wget, -qO-, http://127.0.0.1:8101/health]
+      interval: 3s
+      timeout: 2s
+      retries: 10
+  engageflow-api:
+    build: {context: .., dockerfile: demo/projects/engageflow/Dockerfile}
+    environment: {PORT: "8201"}
+    volumes: [demo-state:/state:ro]
+    depends_on: {init: {condition: service_completed_successfully}}
+    networks: [sandbox]
+    read_only: true
+    tmpfs: [/tmp]
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    mem_limit: 64m
+    cpus: 0.25
+    healthcheck:
+      test: [CMD, wget, -qO-, http://127.0.0.1:8201/health]
+      interval: 3s
+      timeout: 2s
+      retries: 10
+  runner:
+    build: {context: .., dockerfile: demo/scripts/Dockerfile}
+    volumes: [demo-state:/state, demo-workspace:/workspace/projects]
+    depends_on:
+      rdsocial-api: {condition: service_healthy}
+      engageflow-api: {condition: service_healthy}
+    networks: [sandbox]
+    read_only: true
+    tmpfs: [/tmp]
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    mem_limit: 64m
+    cpus: 0.25
+    healthcheck:
+      test: [CMD, wget, -qO-, http://127.0.0.1:9000/health]
+      interval: 3s
+      timeout: 2s
+      retries: 10
+networks:
+  sandbox:
+    internal: true
+volumes:
+  demo-state:
+  demo-workspace:

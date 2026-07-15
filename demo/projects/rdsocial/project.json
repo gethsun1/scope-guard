@@ -1,0 +1,2 @@
+{"id":"rdsocial","name":"RD Social","repository_path":"/workspace/projects/rdsocial","service":"rdsocial-api","database":"rdsocial","port":8101,"domain":"api.rdsocialapp.test","health_endpoint":"/health","protected":false}
+

@@ -1,0 +1,2 @@
+{"projects":[{"id":"rdsocial","role":"target","path":"/workspace/projects/rdsocial","service":"rdsocial-api","database":"rdsocial","port":8101,"domain":"api.rdsocialapp.test"},{"id":"engageflow","role":"protected","path":"/workspace/projects/engageflow","service":"engageflow-api","database":"engageflow","port":8201,"domain":"api.engageflow.test"}]}
+
