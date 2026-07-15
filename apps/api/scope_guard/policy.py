@@ -43,6 +43,10 @@ def evaluate(action: ProposedAction, manifest: BoundaryManifest) -> PolicyDecisi
         return _decision(action, DecisionType.BLOCK_UNKNOWN_RESOURCE, "SG-UNKNOWN-001",
             "The command references no registered resource; unknown resources are denied.",
             [Violation(rule="SG-UNKNOWN-001", detail="No registered resource resolved")], resources)
+    if any(resource.project_id is None for resource in parsed.resources):
+        return _decision(action, DecisionType.BLOCK_UNKNOWN_RESOURCE, "SG-UNKNOWN-002",
+            "The command references an unregistered workspace resource; unknown resources are denied.",
+            [Violation(rule="SG-UNKNOWN-002", detail="Unregistered workspace resource")], resources)
     if any(resource.project_id not in {manifest.target_project, None} for resource in parsed.resources):
         return _decision(action, DecisionType.BLOCK_OUT_OF_SCOPE, "SG-SCOPE-001",
             "The action references a resource outside the approved target project.",
@@ -52,4 +56,3 @@ def evaluate(action: ProposedAction, manifest: BoundaryManifest) -> PolicyDecisi
             "The action is in scope, but this mutation requires human approval.", [], resources)
     return _decision(action, DecisionType.ALLOW, "SG-SCOPE-ALLOW",
         "The action references only resources allowed by the approved boundary.", [], resources)
-

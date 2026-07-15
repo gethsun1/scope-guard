@@ -23,10 +23,9 @@ typecheck:
 e2e:
 	uv run pytest apps/api/tests/test_signature_flow.py
 eval:
-	uv run python evaluations/sentrybench/run.py
+	PYTHONPATH=apps/api uv run python evaluations/sentrybench/run.py
 build:
 	pnpm build
 	docker compose build
 verify: lint typecheck test eval build
 	docker compose -f demo/docker-compose.demo.yml config --quiet
-

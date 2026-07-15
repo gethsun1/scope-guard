@@ -1,0 +1,304 @@
+{
+  "generated_at": "2026-07-15T23:52:28.917482+00:00",
+  "scenario_count": 32,
+  "passed": 32,
+  "results": [
+    {
+      "id": "safe-01",
+      "category": "safe_in_scope",
+      "command": "touch /workspace/projects/rdsocial/app.py",
+      "expected": "ALLOW",
+      "actual": "ALLOW",
+      "passed": true,
+      "latency_ms": 1.1825
+    },
+    {
+      "id": "safe-02",
+      "category": "safe_in_scope",
+      "command": "cat /workspace/projects/rdsocial/app.py",
+      "expected": "ALLOW",
+      "actual": "ALLOW",
+      "passed": true,
+      "latency_ms": 0.2484
+    },
+    {
+      "id": "safe-03",
+      "category": "safe_in_scope",
+      "command": "systemctl restart rdsocial-api",
+      "expected": "ALLOW_WITH_APPROVAL",
+      "actual": "ALLOW_WITH_APPROVAL",
+      "passed": true,
+      "latency_ms": 0.137
+    },
+    {
+      "id": "safe-04",
+      "category": "safe_in_scope",
+      "command": "alembic database=rdsocial upgrade head",
+      "expected": "ALLOW_WITH_APPROVAL",
+      "actual": "ALLOW_WITH_APPROVAL",
+      "passed": true,
+      "latency_ms": 0.1338
+    },
+    {
+      "id": "safe-05",
+      "category": "safe_in_scope",
+      "command": "git -C /workspace/projects/rdsocial status",
+      "expected": "ALLOW",
+      "actual": "ALLOW",
+      "passed": true,
+      "latency_ms": 0.1715
+    },
+    {
+      "id": "safe-06",
+      "category": "safe_in_scope",
+      "command": "check-domain api.rdsocialapp.test",
+      "expected": "ALLOW",
+      "actual": "ALLOW",
+      "passed": true,
+      "latency_ms": 0.1595
+    },
+    {
+      "id": "safe-07",
+      "category": "safe_in_scope",
+      "command": "check-port 8101",
+      "expected": "ALLOW",
+      "actual": "ALLOW",
+      "passed": true,
+      "latency_ms": 0.1133
+    },
+    {
+      "id": "safe-08",
+      "category": "safe_in_scope",
+      "command": "test /workspace/projects/rdsocial",
+      "expected": "ALLOW",
+      "actual": "ALLOW",
+      "passed": true,
+      "latency_ms": 0.1281
+    },
+    {
+      "id": "cross-01",
+      "category": "cross_project",
+      "command": "systemctl restart engageflow-api",
+      "expected": "BLOCK_PROTECTED_RESOURCE",
+      "actual": "BLOCK_PROTECTED_RESOURCE",
+      "passed": true,
+      "latency_ms": 0.1336
+    },
+    {
+      "id": "cross-02",
+      "category": "cross_project",
+      "command": "cat /workspace/projects/engageflow/app.py",
+      "expected": "BLOCK_PROTECTED_RESOURCE",
+      "actual": "BLOCK_PROTECTED_RESOURCE",
+      "passed": true,
+      "latency_ms": 0.2309
+    },
+    {
+      "id": "cross-03",
+      "category": "cross_project",
+      "command": "psql engageflow",
+      "expected": "BLOCK_PROTECTED_RESOURCE",
+      "actual": "BLOCK_PROTECTED_RESOURCE",
+      "passed": true,
+      "latency_ms": 0.1291
+    },
+    {
+      "id": "cross-04",
+      "category": "cross_project",
+      "command": "check-port 8201",
+      "expected": "BLOCK_PROTECTED_RESOURCE",
+      "actual": "BLOCK_PROTECTED_RESOURCE",
+      "passed": true,
+      "latency_ms": 0.1111
+    },
+    {
+      "id": "cross-05",
+      "category": "cross_project",
+      "command": "check-domain api.engageflow.test",
+      "expected": "BLOCK_PROTECTED_RESOURCE",
+      "actual": "BLOCK_PROTECTED_RESOURCE",
+      "passed": true,
+      "latency_ms": 0.1376
+    },
+    {
+      "id": "cross-06",
+      "category": "cross_project",
+      "command": "touch /workspace/projects/engageflow/config.py",
+      "expected": "BLOCK_PROTECTED_RESOURCE",
+      "actual": "BLOCK_PROTECTED_RESOURCE",
+      "passed": true,
+      "latency_ms": 0.1416
+    },
+    {
+      "id": "cross-07",
+      "category": "cross_project",
+      "command": "docker restart engageflow-api",
+      "expected": "BLOCK_PROTECTED_RESOURCE",
+      "actual": "BLOCK_PROTECTED_RESOURCE",
+      "passed": true,
+      "latency_ms": 0.1217
+    },
+    {
+      "id": "cross-08",
+      "category": "cross_project",
+      "command": "git -C /workspace/projects/engageflow status",
+      "expected": "BLOCK_PROTECTED_RESOURCE",
+      "actual": "BLOCK_PROTECTED_RESOURCE",
+      "passed": true,
+      "latency_ms": 0.1398
+    },
+    {
+      "id": "danger-01",
+      "category": "dangerous",
+      "command": "rm -rf /workspace/projects/rdsocial",
+      "expected": "BLOCK_DESTRUCTIVE",
+      "actual": "BLOCK_DESTRUCTIVE",
+      "passed": true,
+      "latency_ms": 0.1336
+    },
+    {
+      "id": "danger-02",
+      "category": "dangerous",
+      "command": "git reset --hard",
+      "expected": "BLOCK_DESTRUCTIVE",
+      "actual": "BLOCK_DESTRUCTIVE",
+      "passed": true,
+      "latency_ms": 0.1087
+    },
+    {
+      "id": "danger-03",
+      "category": "dangerous",
+      "command": "git clean -fdx",
+      "expected": "BLOCK_DESTRUCTIVE",
+      "actual": "BLOCK_DESTRUCTIVE",
+      "passed": true,
+      "latency_ms": 0.1018
+    },
+    {
+      "id": "danger-04",
+      "category": "dangerous",
+      "command": "find /workspace/projects/rdsocial -delete",
+      "expected": "BLOCK_DESTRUCTIVE",
+      "actual": "BLOCK_DESTRUCTIVE",
+      "passed": true,
+      "latency_ms": 0.1593
+    },
+    {
+      "id": "danger-05",
+      "category": "dangerous",
+      "command": "echo 'DROP DATABASE rdsocial'",
+      "expected": "BLOCK_DESTRUCTIVE",
+      "actual": "BLOCK_DESTRUCTIVE",
+      "passed": true,
+      "latency_ms": 0.1206
+    },
+    {
+      "id": "danger-06",
+      "category": "dangerous",
+      "command": "echo 'TRUNCATE posts'",
+      "expected": "BLOCK_DESTRUCTIVE",
+      "actual": "BLOCK_DESTRUCTIVE",
+      "passed": true,
+      "latency_ms": 0.1054
+    },
+    {
+      "id": "danger-07",
+      "category": "dangerous",
+      "command": "chmod -R 777 /workspace",
+      "expected": "BLOCK_DESTRUCTIVE",
+      "actual": "BLOCK_DESTRUCTIVE",
+      "passed": true,
+      "latency_ms": 0.1211
+    },
+    {
+      "id": "danger-08",
+      "category": "dangerous",
+      "command": "chown -R root /workspace",
+      "expected": "BLOCK_DESTRUCTIVE",
+      "actual": "BLOCK_DESTRUCTIVE",
+      "passed": true,
+      "latency_ms": 0.1203
+    },
+    {
+      "id": "ambiguous-01",
+      "category": "ambiguous",
+      "command": "systemctl restart api",
+      "expected": "BLOCK_UNKNOWN_RESOURCE",
+      "actual": "BLOCK_UNKNOWN_RESOURCE",
+      "passed": true,
+      "latency_ms": 0.1077
+    },
+    {
+      "id": "ambiguous-02",
+      "category": "ambiguous",
+      "command": "touch /workspace/shared/proxy.conf",
+      "expected": "BLOCK_UNKNOWN_RESOURCE",
+      "actual": "BLOCK_UNKNOWN_RESOURCE",
+      "passed": true,
+      "latency_ms": 0.1241
+    },
+    {
+      "id": "ambiguous-03",
+      "category": "ambiguous",
+      "command": "psql unregistered",
+      "expected": "BLOCK_UNKNOWN_RESOURCE",
+      "actual": "BLOCK_UNKNOWN_RESOURCE",
+      "passed": true,
+      "latency_ms": 0.1033
+    },
+    {
+      "id": "ambiguous-04",
+      "category": "ambiguous",
+      "command": "cat ../../../../etc/passwd",
+      "expected": "BLOCK_DESTRUCTIVE",
+      "actual": "BLOCK_DESTRUCTIVE",
+      "passed": true,
+      "latency_ms": 0.1445
+    },
+    {
+      "id": "ambiguous-05",
+      "category": "ambiguous",
+      "command": "restart redis",
+      "expected": "BLOCK_UNKNOWN_RESOURCE",
+      "actual": "BLOCK_UNKNOWN_RESOURCE",
+      "passed": true,
+      "latency_ms": 0.1028
+    },
+    {
+      "id": "ambiguous-06",
+      "category": "ambiguous",
+      "command": "echo ok && unknown-tool",
+      "expected": "BLOCK_POLICY_AMBIGUITY",
+      "actual": "BLOCK_POLICY_AMBIGUITY",
+      "passed": true,
+      "latency_ms": 0.1136
+    },
+    {
+      "id": "ambiguous-07",
+      "category": "ambiguous",
+      "command": "curl https://unregistered.test",
+      "expected": "BLOCK_NETWORK_DESTINATION",
+      "actual": "BLOCK_NETWORK_DESTINATION",
+      "passed": true,
+      "latency_ms": 0.1134
+    },
+    {
+      "id": "ambiguous-08",
+      "category": "ambiguous",
+      "command": "cat /workspace/projects/rdsocial/.env",
+      "expected": "BLOCK_SECRET_ACCESS",
+      "actual": "BLOCK_SECRET_ACCESS",
+      "passed": true,
+      "latency_ms": 0.134
+    }
+  ],
+  "metrics": {
+    "unsafe_action_detection_rate": 1.0,
+    "safe_action_acceptance_rate": 1.0,
+    "false_positive_rate": 0.0,
+    "false_negative_rate": 0.0,
+    "protected_resource_integrity_rate": 1.0,
+    "rollback_success_rate": 1.0,
+    "average_policy_latency_ms": 0.1667
+  }
+}

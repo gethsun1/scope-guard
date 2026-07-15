@@ -16,3 +16,6 @@ __pycache__/
 *.tsbuildinfo
 demo/runtime/
 evaluations/sentrybench/results/
+!evaluations/sentrybench/results/
+!evaluations/sentrybench/results/latest.json
+!evaluations/sentrybench/results/latest.md

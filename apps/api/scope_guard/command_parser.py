@@ -7,7 +7,7 @@ from .inventory import all_resources
 from .models import Resource, ResourceType
 
 DANGEROUS = (("rm", "-rf"), ("git", "clean"), ("git", "reset", "--hard"),
-             ("find", "-delete"), ("chmod", "-R"), ("chown", "-R"))
+             ("find", "-delete"), ("chmod", "-r"), ("chown", "-r"))
 SECRETS = (".env", "id_rsa", "credentials", "secret")
 OPERATORS = {";", "&&", "||", "|", ">", ">>", "<"}
 
@@ -43,7 +43,7 @@ def analyze(command: str, working_directory: str = "/workspace/projects/rdsocial
         if any(lowered[index:index + len(sequence)] == sequence for index in range(len(lowered))):
             result.dangerous_patterns.append(" ".join(sequence))
     joined = " ".join(lowered)
-    if "drop database" in joined or "truncate" in lowered:
+    if "drop database" in joined or "truncate" in joined:
         result.dangerous_patterns.append("destructive_database_operation")
     if "find" in lowered and "-delete" in lowered:
         result.dangerous_patterns.append("find -delete")
