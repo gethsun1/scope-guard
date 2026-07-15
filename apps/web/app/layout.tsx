@@ -1,0 +1,8 @@
+import type { Metadata } from "next";
+import "./globals.css";
+
+export const metadata: Metadata = { title: "Scope Guard", description: "Intent-bound agent execution" };
+
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  return <html lang="en"><body>{children}</body></html>;
+}

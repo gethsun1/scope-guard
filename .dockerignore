@@ -1,0 +1,12 @@
+.git
+.venv
+node_modules
+**/node_modules
+**/.next
+**/*.tsbuildinfo
+.env
+coverage
+test-results
+playwright-report
+scopeguard.db
+
