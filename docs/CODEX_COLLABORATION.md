@@ -48,3 +48,23 @@ not occur.
   unknown EngageFlow restart with HTTP 403; deploy, migration, deliberate failure, and
   rollback executed in-container; EngageFlow retained the same SHA-256 hash and healthy
   state throughout; RD Social returned exactly to its pre-mutation hash after rollback.
+
+## 2026-07-16 — Phases 3–8: guarded execution safety loop
+
+- Prompt: implement inventory, GPT-5.6 planning, deterministic policy, Codex orchestration,
+  snapshots, rollback, audit, streaming events, and reports without weakening Docker isolation.
+- Codex work: added the complete typed domain model, registered inventory graph, strict demo
+  and live Responses API planners, demo and app-server Codex adapters, structured shell
+  analysis, all required policy decisions, approval gates, hash-chained audit events, SSE,
+  downloadable JSON/Markdown reports, request correlation, demo authentication, and all
+  required task APIs. The control API joins the sandbox only through an internal network;
+  the runner remains unable to reach external networks.
+- Review/corrections: added token-bound resource matching to prevent `rdsocial` database
+  substring collisions with `rdsocial-api`; added non-adjacent `find … -delete` detection;
+  corrected the control API network topology so only its public HTTP port is exposed.
+- Human decisions: model output may propose and explain but cannot authorize an action.
+- Related commit: `feat: integrate codex guarded execution flow`.
+- Tests: Ruff and strict MyPy passed; 18 backend unit/integration tests passed; the full
+  failure-injection flow ran against real Docker services, blocked EngageFlow, returned a
+  correction, required approval, rolled RD Social back, verified audit integrity, and
+  produced a downloadable report.

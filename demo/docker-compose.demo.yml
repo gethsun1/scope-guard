@@ -61,9 +61,33 @@ services:
       interval: 3s
       timeout: 2s
       retries: 10
+  control-api:
+    build: {context: .., dockerfile: apps/api/Dockerfile}
+    environment:
+      DEMO_MODE: "true"
+      DEMO_RUNNER_URL: http://runner:9000
+      DATABASE_URL: sqlite+aiosqlite:////data/scopeguard.db
+      ALLOWED_ORIGINS: http://localhost:3000
+    ports: ["8000:8000"]
+    volumes: [control-data:/data]
+    depends_on: {runner: {condition: service_healthy}}
+    networks: [sandbox, control]
+    read_only: true
+    tmpfs: [/tmp]
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    mem_limit: 256m
+    cpus: 0.5
+    healthcheck:
+      test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health')"]
+      interval: 3s
+      timeout: 2s
+      retries: 10
 networks:
   sandbox:
     internal: true
+  control:
 volumes:
   demo-state:
   demo-workspace:
+  control-data:

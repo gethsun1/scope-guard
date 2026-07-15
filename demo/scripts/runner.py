@@ -4,7 +4,7 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
 
 STATE = Path("/state")
-ALLOWED = {"snapshot", "deploy_rdsocial", "migrate_rdsocial", "fail_rdsocial", "rollback_rdsocial", "status"}
+ALLOWED = {"snapshot", "deploy_rdsocial", "migrate_rdsocial", "fail_rdsocial", "rollback_rdsocial", "reset", "status"}
 
 
 def digest(path: Path) -> str:
@@ -25,6 +25,11 @@ def execute(operation: str) -> dict[str, object]:
         data = json.loads(rd.read_text()); data["healthy"] = False; rd.write_text(json.dumps(data))
     elif operation == "rollback_rdsocial":
         rd.write_bytes((STATE / "rdsocial.snapshot.json").read_bytes())
+    elif operation == "reset":
+        rd.write_text(json.dumps({"healthy": True, "release": 1, "migration": 0,
+                                  "service": "rdsocial-api"}))
+        protected.write_text(json.dumps({"healthy": True, "release": 1, "migration": 0,
+                                         "service": "engageflow-api"}))
     return {"ok": True, "operation": operation, "rdsocial_hash": digest(rd),
             "engageflow_hash": digest(protected), "engageflow": json.loads(protected.read_text())}
 
@@ -54,4 +59,3 @@ class Handler(BaseHTTPRequestHandler):
 
 
 HTTPServer(("0.0.0.0", 9000), Handler).serve_forever()
-
