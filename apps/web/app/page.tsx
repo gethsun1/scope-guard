@@ -1,3 +1,2 @@
-export default function Home() {
-  return <main><h1>Scope Guard</h1><p>Let coding agents move fast—without letting them wander.</p></main>;
-}
+import { ControlPlane } from "@/components/control-plane";
+export default function Page(){ return <ControlPlane/>; }

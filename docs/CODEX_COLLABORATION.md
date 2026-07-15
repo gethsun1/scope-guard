@@ -68,3 +68,20 @@ not occur.
   failure-injection flow ran against real Docker services, blocked EngageFlow, returned a
   correction, required approval, rolled RD Social back, verified audit integrity, and
   produced a downloadable report.
+
+## 2026-07-16 — Phases 9–11: evaluation, UX, and submission
+
+- Prompt: finish the benchmark, polished non-chat interface, security/architecture docs,
+  deployment readiness, and hackathon submission material.
+- Codex work: built five responsive control-plane routes, explicit demo-provider labels,
+  inventory graph, manifest review, blocked-action evidence, approval card, audit timeline,
+  report download, and evaluation dashboard. Added 32 SentryBench scenarios and generated
+  current JSON/Markdown results. Completed architecture, threat model, product decisions,
+  deployment, evaluation, demo script, Devpost draft, and root README.
+- Review/corrections: removed external font loading from the interface; tightened unknown
+  workspace resource handling; fixed case-normalized recursive permission detection and
+  quoted TRUNCATE detection after the first benchmark exposed mismatches.
+- Human decisions: hosted writable execution remains optional; local Docker is authoritative.
+- Related commits: `test: add sentrybench evaluation suite` and
+  `feat: complete execution dashboard`.
+- Tests: SentryBench 32/32; Vitest 3/3; ESLint, TypeScript, and Next.js production build pass.
