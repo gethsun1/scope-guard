@@ -1,3 +1,4 @@
+import asyncio
 import json
 import logging
 from collections.abc import AsyncIterator, Awaitable, Callable
@@ -8,6 +9,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, PlainTextResponse, StreamingResponse
 
 from . import engine
+from .asp import MAX_REQUEST_BYTES, SERVICE_VERSION, evaluate_asp_request
+from .asp_models import AspAnalyzeRequest, AspAnalyzeResponse, AspHealthResponse
 from .config import settings
 from .engine import (
     TASKS,
@@ -37,12 +40,19 @@ async def request_context(request: Request,
                           call_next: Callable[[Request], Awaitable[Response]]) -> Response:
     request_id = request.headers.get("x-request-id", str(uuid4()))
     correlation_id = request.headers.get("x-correlation-id", request_id)
+    if request.url.path == "/api/v1/asp/analyze":
+        content_length = request.headers.get("content-length")
+        if content_length and content_length.isdigit() and int(content_length) > MAX_REQUEST_BYTES:
+            return JSONResponse(status_code=413, content={"error": {"code": "REQUEST_TOO_LARGE",
+                "message": f"Request body must not exceed {MAX_REQUEST_BYTES} bytes",
+                "request_id": request_id, "correlation_id": correlation_id}})
     try:
         response = await call_next(request)
-    except Exception as error:
+    except Exception:
         logging.exception("request_failed")
         return JSONResponse(status_code=500, content={"error": {"code": "INTERNAL_ERROR",
-            "message": str(error), "request_id": request_id, "correlation_id": correlation_id}})
+            "message": "The request could not be completed", "request_id": request_id,
+            "correlation_id": correlation_id}})
     response.headers["X-Request-ID"] = request_id
     response.headers["X-Correlation-ID"] = correlation_id
     response.headers["X-Content-Type-Options"] = "nosniff"
@@ -68,6 +78,25 @@ def task_or_404(task_id: str) -> object:
 async def health() -> dict[str, str]:
     return {"status": "healthy", "mode": "demo" if settings().demo_mode else "live",
             "provider": "codex_demo" if settings().demo_mode else "codex_live"}
+
+
+@app.get("/api/v1/asp/health", response_model=AspHealthResponse, operation_id="get_asp_health",
+         tags=["OKX ASP"], summary="Check the read-only Scope Guard ASP")
+async def asp_health() -> AspHealthResponse:
+    return AspHealthResponse(version=SERVICE_VERSION)
+
+
+@app.post("/api/v1/asp/analyze", response_model=AspAnalyzeResponse,
+          operation_id="analyze_agent_actions", tags=["OKX ASP"],
+          summary="Evaluate proposed AI-agent actions before execution",
+          description=("Deterministically returns ALLOW, BLOCK, or REQUIRE_APPROVAL for a bounded "
+                       "action plan. This endpoint analyzes text only and never executes actions."))
+async def asp_analyze(value: AspAnalyzeRequest) -> AspAnalyzeResponse:
+    try:
+        return await asyncio.wait_for(asyncio.to_thread(evaluate_asp_request, value), timeout=2.0)
+    except TimeoutError as error:
+        raise HTTPException(status_code=503, detail={"code": "ANALYSIS_TIMEOUT",
+            "message": "The bounded analysis did not complete in time"}) from error
 
 
 @app.get("/api/projects")

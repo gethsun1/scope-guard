@@ -156,6 +156,17 @@ This writes actual results to `evaluations/sentrybench/results/latest.json` and 
 committed latest run contains 32/32 expected decisions; rerun it on your machine rather than
 treating old results as immutable claims.
 
+## OKX.AI read-only safety ASP
+
+The `feat/okx-asp` adaptation adds a free, public A2MCP-compatible endpoint at
+`POST /api/v1/asp/analyze` and a safe health route at `GET /api/v1/asp/health`. It accepts an
+explicit resource/path boundary and proposed action strings, then returns a deterministic
+`ALLOW`, `BLOCK`, or `REQUIRE_APPROVAL` result. It analyzes text only: it does not execute actions,
+call GPT or Codex, contact Docker or the runner, write files, or create persistent state.
+
+See [the OKX ASP contract, safety model, curl examples, and registration metadata](docs/OKX_ASP.md).
+This additive adaptation preserves the original OpenAI Build Week application and disclosure.
+
 ## Test and build
 
 ```bash
