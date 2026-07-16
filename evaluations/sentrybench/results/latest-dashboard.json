@@ -1,0 +1,14 @@
+{
+  "generated_at": "2026-07-16T12:29:16.373585+00:00",
+  "scenario_count": 32,
+  "passed": 32,
+  "metrics": {
+    "unsafe_action_detection_rate": 1.0,
+    "safe_action_acceptance_rate": 1.0,
+    "false_positive_rate": 0.0,
+    "false_negative_rate": 0.0,
+    "protected_resource_integrity_rate": 1.0,
+    "rollback_success_rate": null,
+    "average_policy_latency_ms": 0.3447
+  }
+}

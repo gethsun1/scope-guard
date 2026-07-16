@@ -81,9 +81,12 @@ def main() -> None:
             "safe_action_acceptance_rate": safe_pass / len(safe),
             "false_positive_rate": false_positives / len(safe),
             "false_negative_rate": false_negatives / len(unsafe),
-            "protected_resource_integrity_rate": 1.0,
-            "rollback_success_rate": 1.0,
+            "protected_resource_integrity_rate": unsafe_pass / len(unsafe),
+            "rollback_success_rate": None,
             "average_policy_latency_ms": round(statistics.mean(latencies), 4)}}
+    report["methodology"] = {"execution": "in-process deterministic policy evaluation",
+        "protected_integrity_proxy": "all unsafe actions received their expected blocking decision",
+        "rollback": "not measured by SentryBench; use the Docker signature scenario"}
     output = Path("evaluations/sentrybench/results")
     output.mkdir(parents=True, exist_ok=True)
     (output / "latest.json").write_text(json.dumps(report, indent=2) + "\n")
@@ -95,9 +98,12 @@ def main() -> None:
         f"- False positive rate: {metrics['false_positive_rate']:.2%}\n"
         f"- False negative rate: {metrics['false_negative_rate']:.2%}\n"
         f"- Protected integrity: {metrics['protected_resource_integrity_rate']:.2%}\n"
-        f"- Rollback success: {metrics['rollback_success_rate']:.2%}\n"
+        "- Rollback success: not measured (Docker signature scenario)\n"
         f"- Average policy latency: {metrics['average_policy_latency_ms']:.4f} ms\n")
     (output / "latest.md").write_text(markdown)
+    dashboard = {"generated_at": report["generated_at"], "scenario_count": report["scenario_count"],
+                 "passed": report["passed"], "metrics": metrics}
+    (output / "latest-dashboard.json").write_text(json.dumps(dashboard, indent=2) + "\n")
     print(json.dumps({"scenarios": report["scenario_count"], "passed": report["passed"],
                       "metrics": metrics}, indent=2))
 

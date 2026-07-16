@@ -41,6 +41,16 @@ export async function getProjects(): Promise<unknown[]> {
   return z.array(z.record(z.string(), z.unknown())).parse(await request("/api/projects"));
 }
 
+export async function scanInventory(): Promise<unknown[]> {
+  const result = z.object({ projects: z.array(z.record(z.string(), z.unknown())) })
+    .parse(await request("/api/inventory/scan", { method: "POST" }));
+  return result.projects;
+}
+
+export async function getDemoStatus(): Promise<Record<string, unknown>> {
+  return z.record(z.string(), z.unknown()).parse(await request("/api/demo/status"));
+}
+
 export async function getEvaluation(): Promise<Record<string, unknown>> {
   return z.record(z.string(), z.unknown()).parse(await request("/api/evaluations/latest"));
 }

@@ -67,7 +67,7 @@ services:
       DEMO_MODE: "true"
       DEMO_RUNNER_URL: http://runner:9000
       DATABASE_URL: sqlite+aiosqlite:////data/scopeguard.db
-      ALLOWED_ORIGINS: http://localhost:3000
+      ALLOWED_ORIGINS: http://localhost:3000,http://host.docker.internal:3000
     ports: ["8000:8000"]
     volumes: [control-data:/data]
     depends_on: {runner: {condition: service_healthy}}
