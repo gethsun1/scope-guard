@@ -5,7 +5,7 @@ import { Activity, AlertTriangle, ArrowRight, Box, Check, ChevronRight, CircleGa
   Play, RefreshCw, Server, Shield, ShieldCheck, Terminal, TestTube2 } from "lucide-react";
 import Link from "next/link";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { API_URL, createTask, getEvaluation, getProjects, GuardedTask, mutateTask } from "@/lib/api";
+import { API_URL, createTask, getEvaluation, getProjects, getTask, GuardedTask, mutateTask } from "@/lib/api";
 
 type View = "overview" | "inventory" | "task" | "execution" | "bench";
 const nav: { id: View; label: string; href: string; icon: typeof Shield }[] = [
@@ -25,10 +25,19 @@ export function ControlPlane({ initialView = "overview" }: { initialView?: View 
   const [failure, setFailure] = useState(true);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
-  useEffect(() => { getProjects().then(setProjects).catch(() => setProjects([])); getEvaluation().then(setEvaluation).catch(() => setEvaluation({})); }, []);
+  useEffect(() => {
+    getProjects().then(setProjects).catch(() => setProjects([]));
+    getEvaluation().then(setEvaluation).catch(() => setEvaluation({}));
+    const activeTask = window.localStorage.getItem("scope-guard-active-task");
+    if (activeTask) getTask(activeTask).then(setTask).catch(() => window.localStorage.removeItem("scope-guard-active-task"));
+  }, []);
   const run = useCallback(async (fn: () => Promise<GuardedTask>) => {
     setBusy(true); setError("");
-    try { setTask(await fn()); } catch (reason) { setError(reason instanceof Error ? reason.message : "Request failed"); }
+    try {
+      const value = await fn();
+      setTask(value);
+      window.localStorage.setItem("scope-guard-active-task", value.id);
+    } catch (reason) { setError(reason instanceof Error ? reason.message : "Request failed"); }
     finally { setBusy(false); }
   }, []);
   const start = () => run(async () => mutateTask((await createTask(instruction, failure)).id, "plan"));

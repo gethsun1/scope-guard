@@ -33,6 +33,10 @@ export async function mutateTask(taskId: string, operation: string): Promise<Gua
   return TaskSchema.parse(await request(`/api/tasks/${taskId}/${operation}`, { method: "POST" }));
 }
 
+export async function getTask(taskId: string): Promise<GuardedTask> {
+  return TaskSchema.parse(await request(`/api/tasks/${taskId}`));
+}
+
 export async function getProjects(): Promise<unknown[]> {
   return z.array(z.record(z.string(), z.unknown())).parse(await request("/api/projects"));
 }
@@ -40,4 +44,3 @@ export async function getProjects(): Promise<unknown[]> {
 export async function getEvaluation(): Promise<Record<string, unknown>> {
   return z.record(z.string(), z.unknown()).parse(await request("/api/evaluations/latest"));
 }
-
