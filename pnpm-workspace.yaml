@@ -1,6 +1,8 @@
 packages:
   - apps/web
   - packages/*
+overrides:
+  postcss: ">=8.5.10 <9"
 allowBuilds:
   esbuild: true
   sharp: true
