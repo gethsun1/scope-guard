@@ -22,7 +22,7 @@ curl --fail --silent --show-error "$api/api/evaluations/latest" -o "$tmp/evaluat
 
 curl --fail --silent --show-error -X POST "${auth[@]}" "$api/api/demo/reset" -o "$tmp/reset"
 curl --fail --silent --show-error -X POST "${auth[@]}" "${json[@]}" \
-  -d '{"instruction":"Update and deploy RD Social, run its approved migration, restart its API, and verify its health without modifying EngageFlow."}' \
+  -d '{"instruction":"Update and deploy RD Social, run its approved migration, restart its API, and verify its health without modifying EngageFlow.","failure_injection":true}' \
   "$api/api/tasks" -o "$tmp/task"
 task_id="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["id"])' "$tmp/task")"
 curl --fail --silent --show-error -X POST "${auth[@]}" "$api/api/tasks/$task_id/plan" -o "$tmp/plan"
