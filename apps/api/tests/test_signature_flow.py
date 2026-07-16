@@ -1,6 +1,6 @@
 import hashlib
 import json
-from typing import Any
+from typing import Any, cast
 
 from fastapi.testclient import TestClient
 from scope_guard import engine
@@ -30,8 +30,10 @@ class FakeRunner(engine.Runner):
         if operation == "reset":
             self.rd = {"healthy": True, "release": 1, "migration": 0}
             self.engage = {"healthy": True, "release": 1, "migration": 0}
-        return {"ok": True, "rdsocial_hash": self.digest(self.rd),
-                "engageflow_hash": self.digest(self.engage), "engageflow": self.engage}
+        result: dict[str, Any] = {"ok": True, "rdsocial_hash": self.digest(self.rd),
+                                  "engageflow_hash": self.digest(self.engage),
+                                  "engageflow": self.engage}
+        return result
 
 
 client = TestClient(app)
@@ -57,7 +59,7 @@ def run_flow(failure: bool = False) -> dict[str, Any]:
     assert body["actions"][1]["decision"]["suggested_correction"] == "systemctl restart rdsocial-api"
     final = client.post(f"/api/tasks/{task_id}/actions/restart-rdsocial/approve", headers=headers)
     assert final.status_code == 200
-    return final.json()
+    return cast(dict[str, Any], final.json())
 
 
 def test_complete_signature_flow() -> None:

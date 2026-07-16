@@ -187,5 +187,6 @@ async def demo_reset(_: str = Depends(demo_auth)) -> dict[str, object]:
 @app.get("/api/demo/status")
 async def demo_status() -> dict[str, object]:
     return {"mode": "demo" if settings().demo_mode else "live", "provider":
-            "codex_demo" if settings().demo_mode else "codex_live", "tasks": len(TASKS),
+            "codex_demo" if settings().codex_provider != "live" else "codex_live",
+            "planner_provider": "gpt_demo" if settings().demo_mode else "gpt_live", "tasks": len(TASKS),
             "sandbox": "docker-required"}

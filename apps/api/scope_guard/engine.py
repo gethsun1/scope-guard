@@ -7,7 +7,7 @@ from uuid import uuid4
 import httpx
 
 from .audit import AuditChain
-from .codex import DemoCodexAdapter
+from .codex import codex_adapter, codex_event_metadata
 from .config import settings
 from .models import (
     BoundaryManifest,
@@ -15,8 +15,6 @@ from .models import (
     DecisionType,
     PolicyDecision,
     ProposedAction,
-    Resource,
-    ResourceType,
     Snapshot,
 )
 from .planner import PROMPT_VERSION, DemoPlanner, OpenAIPlanner
@@ -76,8 +74,7 @@ async def plan_task(task: Task) -> dict[str, Any]:
     task.plan = plan.model_dump(mode="json")
     task.manifest = BoundaryManifest(task_id=task.id, target_project=plan.target_project,
         allowed_resources=plan.allowed_resources, protected_resources=plan.protected_resources,
-        approval_required_resources=[Resource(type=ResourceType.SERVICE,
-            identifier="rdsocial-api", project_id="rdsocial")],
+        approval_required_resources=plan.approval_required_resources,
         always_block_rules=["destructive_operation", "protected_resource", "secret_access"],
         created_by="gpt-5.6-demo-planner" if settings().demo_mode else settings().openai_model)
     task.status = "boundary_proposed"
@@ -116,17 +113,22 @@ async def execute_task(task: Task) -> list[dict[str, Any]]:
         health_state={"rdsocial": True, "engageflow": True})
     task.events.append(task.id, "snapshot_created", "sandbox_runner",
                        {"protected_hash": before["engageflow_hash"]})
-    adapter = DemoCodexAdapter()
-    for action in await adapter.actions():
+    adapter = codex_adapter()
+    task.provider = adapter.provider
+    actions = await adapter.actions(task.instruction, task.plan and [task.plan] or [], task.manifest)
+    task.events.append(task.id, "codex_session_started", adapter.provider, codex_event_metadata(adapter))
+    for action in actions:
         task.events.append(task.id, "codex_action_proposed", adapter.provider,
                            {"action_id": action.id, "command": action.command})
         decision = evaluate(action, task.manifest)
         record_decision(task, action, decision)
         if decision.decision == DecisionType.BLOCK_PROTECTED_RESOURCE:
-            task.events.append(task.id, "rejection_returned", "orchestrator",
-                {"action_id": action.id, "decision": decision.decision,
-                 "violations": [item.model_dump() for item in decision.violations],
-                 "suggested_correction": decision.suggested_correction})
+            rejection = {"action_id": action.id, "decision": decision.decision,
+                         "violations": [item.model_dump() for item in decision.violations],
+                         "suggested_correction": decision.suggested_correction}
+            task.events.append(task.id, "rejection_returned", "orchestrator", rejection)
+            if adapter.provider == "codex_live":
+                actions.extend(await adapter.rejection_feedback(rejection))
         elif decision.decision == DecisionType.ALLOW:
             task.events.append(task.id, "action_executed", "sandbox_runner",
                                {"action_id": action.id, "operation": "validated_code_edit"})

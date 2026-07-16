@@ -1,8 +1,9 @@
+from copy import deepcopy
 from datetime import UTC, datetime
 from enum import StrEnum
 from typing import Any
 
-from pydantic import BaseModel, Field, model_validator
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 
 class ResourceType(StrEnum):
@@ -32,11 +33,11 @@ class DecisionType(StrEnum):
 
 
 class Resource(BaseModel):
+    model_config = ConfigDict(extra="forbid")
     type: ResourceType
     identifier: str
     project_id: str | None = None
     protected: bool = False
-    metadata: dict[str, Any] = Field(default_factory=dict)
 
 
 class HealthCheck(BaseModel):
@@ -91,6 +92,7 @@ class BoundaryManifest(BaseModel):
 
 
 class ProposedAction(BaseModel):
+    model_config = ConfigDict(extra="forbid")
     id: str
     sequence: int
     command: str
@@ -146,10 +148,12 @@ class AuditEvent(BaseModel):
 
 
 class PlannerOutput(BaseModel):
+    model_config = ConfigDict(extra="forbid")
     interpreted_intent: str
     target_project: str
     allowed_resources: list[Resource]
     protected_resources: list[Resource]
+    approval_required_resources: list[Resource]
     proposed_steps: list[str]
     risk_summary: str
     validation_plan: list[str]
@@ -157,8 +161,47 @@ class PlannerOutput(BaseModel):
     open_questions: list[str]
     confidence: float = Field(ge=0, le=1)
 
+    @model_validator(mode="after")
+    def plan_is_unambiguous(self) -> "PlannerOutput":
+        if self.open_questions:
+            raise ValueError("planner output contains unresolved questions")
+        allowed = {(resource.type, resource.identifier) for resource in self.allowed_resources}
+        protected = {(resource.type, resource.identifier) for resource in self.protected_resources}
+        approvals = {(resource.type, resource.identifier) for resource in self.approval_required_resources}
+        if allowed & protected or approvals & protected:
+            raise ValueError("planner resource sets overlap")
+        if not self.target_project or not self.allowed_resources or not self.protected_resources:
+            raise ValueError("planner output has an ambiguous resource boundary")
+        return self
+
+
+class ProposedActionSet(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    actions: list[ProposedAction] = Field(min_length=1, max_length=20)
+
 
 class CreateTaskRequest(BaseModel):
     instruction: str = Field(min_length=8, max_length=4000)
     failure_injection: bool = False
 
+
+def strict_json_schema(model: type[BaseModel]) -> dict[str, Any]:
+    """Convert a Pydantic schema to the all-fields-required strict-output subset."""
+    schema = deepcopy(model.model_json_schema())
+
+    def visit(value: Any) -> None:
+        if isinstance(value, dict):
+            properties = value.get("properties")
+            if isinstance(properties, dict):
+                value["additionalProperties"] = False
+                value["required"] = list(properties)
+            elif value.get("type") == "object":
+                value["additionalProperties"] = False
+            for child in value.values():
+                visit(child)
+        elif isinstance(value, list):
+            for child in value:
+                visit(child)
+
+    visit(schema)
+    return schema
