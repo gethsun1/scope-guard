@@ -6,8 +6,9 @@ Scope Guard (Codex Sentry)
 
 ## Elevator pitch
 
-An intent-bound control plane that lets Codex move quickly while deterministic policy keeps
-files, services, databases, networks, and neighboring projects inside an approved boundary.
+An intent-bound execution control plane that lets coding agents move quickly while deterministic
+policy keeps files, services, databases, networks, and neighboring projects inside an approved
+task boundary.
 
 ## Category
 
@@ -15,46 +16,66 @@ Developer Tools — OpenAI Build Week Challenge.
 
 ## Inspiration
 
-Powerful coding agents increasingly deploy software. Shared environments add a new failure
-mode: completing the right task while modifying the wrong project.
+Agents can complete the requested deployment while accidentally touching a neighboring project.
+A conventional sandbox controls reachability; Scope Guard also controls task authorization.
 
 ## What it does
 
-GPT-5.6 proposes a typed boundary; a person approves it; Codex proposes actions; deterministic
-policy blocks scope drift; an isolated Docker runner executes approved operations; validation,
-rollback, audit, and SentryBench provide evidence.
+It inventories synthetic projects, interprets intent, presents an approval boundary, intercepts
+every proposed action, blocks protected or unknown resources, approval-gates target mutations,
+validates health, performs target-only rollback, and exports hash-chained audit evidence.
 
 ## How it was built
 
-Next.js, TypeScript, FastAPI, Pydantic, Docker Compose, OpenAI Responses API adapter, Codex
-adapter, SSE, SHA-256 audit chaining, Pytest, Vitest, and a 32-scenario benchmark.
+Next.js, TypeScript, FastAPI, Pydantic, the OpenAI Responses API, Codex app-server JSONL protocol,
+Docker Compose, SHA-256 audit chaining, Pytest, Vitest, Playwright, and SentryBench.
 
-## Challenges
+## How GPT-5.6 was used
 
-Maintaining non-root ownership during Docker named-volume initialization, keeping the runner
-offline while publishing the API, and preventing substring resource collisions during parsing.
+The optional `gpt_live` planner uses strict structured output for intent, resource boundaries,
+risk, validation, rollback, and confidence. Pydantic validates every result and ambiguity fails
+closed. The credential-free submission demo uses visibly labeled `gpt_demo`. The live GPT smoke
+was not run in this environment because `OPENAI_API_KEY` was unavailable.
 
-## Accomplishments and lessons
+## How Codex was used
 
-The real container demo blocks EngageFlow before execution, returns a correction, approval-
-gates RD Social, deliberately fails health, restores the target hash, preserves the protected
-hash, and produces verified audit evidence. The key lesson: models are excellent proposers and
-collaborators, but authorization should be deterministic and inspectable.
+Codex accelerated implementation, review, testing, debugging, and documentation. The product's
+`codex_live` adapter starts/resumes an app-server thread in read-only proposal mode, validates
+typed actions, returns deterministic rejection context to the same thread, and records its ID.
+A manual live proposal smoke succeeded; `codex_demo` remains the reproducible signature provider.
 
-## GPT-5.6 and Codex
+## Challenges encountered
 
-GPT-5.6 has a strict Responses API planner role: interpretation, resources, risk, validation,
-rollback—never enforcement. Codex accelerated the build and is represented in-product by a
-typed live integration point and deterministic demo provider with the same rejection loop.
+Keeping Docker volumes non-root, separating protected-resource names without substring mistakes,
+preserving a same-thread rejection loop, satisfying strict schemas, and keeping WSL stable while
+Docker, Next.js, and browser tooling shared limited memory.
 
-## Testing / repository / hosted demo
+## Accomplishments
 
-Follow the root README. Add repository URL, hosted read-only dashboard URL, video URL, and
-screenshots before submission. Run `/feedback` in the primary Codex session and paste the real
-returned session ID here; do not invent it.
+The real Docker scenario blocked EngageFlow before execution, returned a correction, required
+approval for RD Social, injected a health failure, restored the target, preserved the protected
+hash, and verified a 20-event audit chain. All 32 current SentryBench decisions pass.
+
+## What was learned
+
+Models are strong interpreters and proposers; authorization is safer when deterministic,
+inspectable, approval-aware, and independent of model confidence.
 
 ## What comes next
 
-PostgreSQL persistence, signed audit export, OAuth/SSO, inventory adapters, policy packs, and
-production-grade live Codex transport.
+Durable PostgreSQL events, production identity, signed exports, policy packs, inventory adapters,
+and separately isolated hosted runners.
 
+## Repository, testing, installation, and platforms
+
+Repository: `GITHUB_REPOSITORY_URL`. Follow the root README. Supported development platforms are
+Linux and WSL2 with Docker Compose v2, Python 3.11+, uv, Node 20+, and pnpm 11. Run Ruff, MyPy,
+Pytest, Vitest, ESLint, TypeScript, Next.js build, Compose validation, and SentryBench using the
+documented commands. GNU Make is optional.
+
+## Hosted demo and video
+
+Live demo: `LIVE_DEMO_URL`. Video: `YOUTUBE_DEMO_URL`. The public configuration must remain
+synthetic, resettable, and disconnected from production infrastructure.
+
+Codex feedback session: `CODEX_FEEDBACK_SESSION_ID`.

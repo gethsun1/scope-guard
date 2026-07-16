@@ -5,7 +5,7 @@ Scope Guard separates proposal, authority, execution, and evidence.
 1. The Next.js control plane collects intent and presents inventory, boundary, approvals,
    live decisions, rollback, audit, and evaluation evidence.
 2. FastAPI validates requests, assigns correlation IDs, selects the planner/Codex providers,
-   owns task state, and streams audit events.
+   owns process-local task state, and exposes completed audit events as an SSE replay.
 3. The planner returns strict `PlannerOutput`. In live mode this uses the OpenAI Responses API;
    demo mode returns deterministic output with the same Pydantic schema.
 4. The Codex adapter emits typed `ProposedAction` objects. Policy rejection is recorded and
@@ -34,4 +34,3 @@ Only the control API also joins `control`, which permits publishing port 8000. T
 apps have no external network route. Named volumes contain only disposable demo state and
 workspace fixtures. All long-running services use UID 10001, read-only roots, `cap_drop: ALL`,
 `no-new-privileges`, health checks, and resource limits.
-

@@ -1,4 +1,4 @@
-# Three-minute demo script
+# 2:45 demo script
 
 ## 0:00–0:20 — Problem
 
@@ -36,8 +36,7 @@ Social, and unchanged EngageFlow hash and health.
 Download the audit report and open SentryBench. State that metrics came from the current
 32-scenario run.
 
-## 2:50–2:59 — Close
+## 2:40–2:45 — Close
 
 Scope Guard lets developers harness powerful coding agents with speed, visibility, and
 enforceable boundaries. Let agents move fast—without letting them wander.
-

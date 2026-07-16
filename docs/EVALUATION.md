@@ -17,3 +17,7 @@ Metrics are calculated, never authored by hand:
 Run `PYTHONPATH=apps/api uv run python evaluations/sentrybench/run.py`. Results depend on the
 current code and machine; see `evaluations/sentrybench/results/latest.json` for the latest run.
 
+The policy benchmark does not execute rollback, so `rollback_success_rate` is `null`; rollback is
+measured separately by the Docker signature scenario. Protected integrity is a policy-level proxy
+for all unsafe cases receiving their expected block, then corroborated by the Docker protected
+hash. Outputs are `latest.json`, `latest.md`, and dashboard-shaped `latest-dashboard.json`.

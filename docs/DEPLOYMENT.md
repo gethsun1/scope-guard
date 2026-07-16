@@ -1,20 +1,54 @@
 # Deployment
 
-## Frontend / Vercel
+The recommended public split is **Next.js on Vercel → FastAPI on Railway → deterministic
+demo provider or a separately isolated runner**. A public deployment must never connect to a
+production VPS, mount a Docker socket, load SSH keys, expose arbitrary shell execution, or
+contain production credentials.
 
-Deploy `apps/web`, set `NEXT_PUBLIC_API_URL` to the HTTPS API origin, and preserve the
-standalone Next.js output. Replace the local demo token flow before exposing mutations.
+## Vercel dashboard
 
-## Backend / Railway
+`vercel.json` builds the `web` workspace. Set `NEXT_PUBLIC_API_URL` to the Railway HTTPS origin
+before building; it is a public browser value, not a secret. From an authenticated developer
+terminal:
 
-Build with `apps/api/Dockerfile`; health path is `/health`; start command is the image default.
-Set `ALLOWED_ORIGINS`, `DEMO_MODE`, provider credentials, a strong audit secret, and database
-URL. SQLite on an ephemeral or multi-replica service can lose/corrupt state: use PostgreSQL and
-durable audit storage for production.
+```bash
+vercel --prod
+```
 
-## Writable demo
+The current fixed demo mutation token is intentionally low assurance. Use the public demo only
+with synthetic, resettable data and rate limiting, or replace it with real identity before any
+non-demo use.
 
-Use `demo/docker-compose.demo.yml` only on a disposable Docker host. It does not require
-privileged mode. Never add the Docker socket, host root, production SSH material, or production
-credentials. A hosted dashboard may be read-only if container execution is unavailable.
+## Railway control plane
 
+`railway.json` builds `apps/api/Dockerfile`; the image starts
+`uvicorn scope_guard.main:app --host 0.0.0.0 --port 8000` and Railway checks `/health`.
+
+```bash
+railway up
+railway domain
+```
+
+Set `APP_ENV=production`, `DEMO_MODE=true`, `CODEX_PROVIDER=demo`, `ALLOWED_ORIGINS` to the exact
+Vercel origin, `DEMO_API_TOKEN` to a deployment secret, and `AUDIT_SIGNING_SECRET` to a distinct
+secret. Do not set live provider credentials on the public demo unless the runner architecture
+has been separately reviewed. `ALLOWED_ORIGINS` accepts a comma-separated list.
+
+## State and runner
+
+Task/audit state is currently process-local despite the documented `DATABASE_URL`; restarts and
+multiple replicas lose or diverge state. Run one replica and describe it as an ephemeral demo.
+Reset restores registered synthetic state. Report downloads work only while the originating
+process retains the task.
+
+Railway should either use a deterministic no-shell provider or call a separately isolated runner
+that exposes the existing named operation allowlist. Never mount `/var/run/docker.sock`, host
+root, SSH material, or production secrets. The local `demo/docker-compose.demo.yml` is the only
+currently verified writable topology; it is not a production deployment template.
+
+## Verification and limitations
+
+After authenticated deployment, check `/health`, browser CORS, task reset, a complete synthetic
+workflow, and report download. No hosted deployment or authenticated Vercel/Railway command was
+executed during this phase. Durable PostgreSQL audit storage, production identity, rate limiting,
+and multi-replica coordination remain future work.

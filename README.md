@@ -6,10 +6,10 @@ Scope Guard, internally codenamed **Codex Sentry**, is an intent-bound execution
 plane for coding agents. It lets a model interpret a task and propose a plan, but places a
 deterministic policy engine between every proposed action and an isolated runner.
 
-> Demo screenshot placeholder — add the final dashboard capture before submission.
-
-Live demo: _add the hosted dashboard URL before submission_. The complete writable sandbox
+Live demo: `LIVE_DEMO_URL` (developer-supplied before submission). The complete writable sandbox
 is intentionally local and Docker-based.
+
+![Scope Guard dashboard](docs/assets/dashboard.png)
 
 ## The problem
 
@@ -41,7 +41,7 @@ the same hash and health state.
 
 - Typed project inventory and resource graph
 - GPT-5.6 Responses API adapter plus clearly labeled offline demo planner
-- Codex app-server abstraction plus deterministic `codex_demo` event provider
+- Read-only Codex app-server proposal adapter plus deterministic `codex_demo` event provider
 - Structured command parsing, normalized paths, and deterministic deny-by-default policy
 - Explicit boundary and medium/high-risk action approvals
 - Non-root Docker runner with no socket, host-root, privileges, secrets, or external network
@@ -73,9 +73,9 @@ Details: [architecture](docs/ARCHITECTURE.md) and [threat model](docs/THREAT_MOD
 **GPT-5.6** interprets intent, proposes resources, explains risk, and drafts validation and
 rollback plans. Its strict JSON is validated and never grants authority.
 
-**Codex** collaborates through proposed actions, receives structured policy rejection, and
-continues with a corrected plan. `codex_demo` is deterministic; `codex_live` is an explicit
-extension point and is never falsely presented as active.
+**Codex** accelerated development and can collaborate through proposed actions, receive
+structured policy rejection, and continue in the same thread. `codex_demo` is deterministic;
+the proposal-only `codex_live` smoke path was exercised locally, but it is not the default.
 
 **The policy engine** is final authority. It parses commands, extracts resources, detects
 danger, matches the approved manifest, denies unknowns, and produces deterministic decisions.
@@ -138,8 +138,10 @@ See the [under-three-minute script](docs/DEMO_SCRIPT.md).
 ## Environment variables
 
 `.env.example` documents all settings. Live planning requires `DEMO_MODE=false`, an
-`OPENAI_API_KEY`, and a supported `OPENAI_MODEL`. Live Codex additionally requires a reachable
-app-server integration. Never place secrets in prompts, logs, or committed files.
+`OPENAI_API_KEY`, and a supported `OPENAI_MODEL`. Live Codex requires the `codex` CLI with
+app-server support and existing authentication. Never place secrets in prompts, logs, or
+committed files. Manual smoke commands are `make smoke-gpt` and `make smoke-codex` (or their
+documented underlying commands); neither runs in CI.
 
 ## SentryBench
 
@@ -155,7 +157,7 @@ treating old results as immutable claims.
 
 ```bash
 uv run ruff check .
-uv run mypy
+uv run mypy apps/api
 uv run pytest -q
 pnpm test
 pnpm lint
@@ -166,6 +168,8 @@ docker compose -f demo/docker-compose.demo.yml config --quiet
 
 With GNU Make installed: `make test`, `make lint`, `make typecheck`, `make e2e`, `make eval`,
 `make build`, or `make verify`.
+
+On Ubuntu, install the optional wrapper with `sudo apt-get update && sudo apt-get install -y make`.
 
 ## Deployment
 
@@ -178,7 +182,7 @@ unprivileged container host. See [deployment guidance](docs/DEPLOYMENT.md).
 
 - Inventory is registered synthetic data, not host discovery.
 - Task state is process-local; SQLite/PostgreSQL persistence is the next production step.
-- Live Codex app-server transport is a typed extension point, not enabled in demo mode.
+- Live providers are opt-in; the GPT-5.6 smoke has not been run without a developer credential.
 - Shell analysis intentionally supports a constrained subset; execution is predefined only.
 - Local demo authentication is not enterprise identity.
 
