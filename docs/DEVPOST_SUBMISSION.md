@@ -78,4 +78,4 @@ documented commands. GNU Make is optional.
 Live demo: `https://scopeguard-vert.vercel.app`. Video: `YOUTUBE_DEMO_URL`. The public configuration must remain
 synthetic, resettable, and disconnected from production infrastructure.
 
-Codex feedback session: `CODEX_FEEDBACK_SESSION_ID`.
+Codex feedback session: `019f67d2-37b1-7a41-b333-bb2175778f6d`.
