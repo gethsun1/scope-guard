@@ -35,7 +35,7 @@ underlying command was run directly. The Makefile is present for environments wi
 
 ## Remaining production work
 
-Durable task/audit persistence, production identity, hosted URLs, demo video, GPT credentialed
+Durable task/audit persistence, production identity, demo video, GPT credentialed
 smoke evidence, and production secret/configuration setup.
 
 ## Safety statement

@@ -6,8 +6,9 @@ Scope Guard, internally codenamed **Codex Sentry**, is an intent-bound execution
 plane for coding agents. It lets a model interpret a task and propose a plan, but places a
 deterministic policy engine between every proposed action and an isolated runner.
 
-Live demo: `LIVE_DEMO_URL` (developer-supplied before submission). The complete writable sandbox
-is intentionally local and Docker-based.
+Live demo: [scopeguard-vert.vercel.app](https://scopeguard-vert.vercel.app). Its API uses a
+synthetic in-memory state machine with no shell or Docker access. The complete writable sandbox
+remains intentionally local and Docker-based.
 
 ![Scope Guard dashboard](docs/assets/dashboard.png)
 

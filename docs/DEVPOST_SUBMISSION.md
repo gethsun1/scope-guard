@@ -68,14 +68,14 @@ and separately isolated hosted runners.
 
 ## Repository, testing, installation, and platforms
 
-Repository: `GITHUB_REPOSITORY_URL`. Follow the root README. Supported development platforms are
+Repository: `https://github.com/gethsun1/scope-guard`. Follow the root README. Supported development platforms are
 Linux and WSL2 with Docker Compose v2, Python 3.11+, uv, Node 20+, and pnpm 11. Run Ruff, MyPy,
 Pytest, Vitest, ESLint, TypeScript, Next.js build, Compose validation, and SentryBench using the
 documented commands. GNU Make is optional.
 
 ## Hosted demo and video
 
-Live demo: `LIVE_DEMO_URL`. Video: `YOUTUBE_DEMO_URL`. The public configuration must remain
+Live demo: `https://scopeguard-vert.vercel.app`. Video: `YOUTUBE_DEMO_URL`. The public configuration must remain
 synthetic, resettable, and disconnected from production infrastructure.
 
 Codex feedback session: `CODEX_FEEDBACK_SESSION_ID`.

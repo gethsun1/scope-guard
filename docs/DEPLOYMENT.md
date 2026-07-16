@@ -48,7 +48,8 @@ currently verified writable topology; it is not a production deployment template
 
 ## Verification and limitations
 
-After authenticated deployment, check `/health`, browser CORS, task reset, a complete synthetic
-workflow, and report download. No hosted deployment or authenticated Vercel/Railway command was
-executed during this phase. Durable PostgreSQL audit storage, production identity, rate limiting,
+The hosted demo is deployed at `https://scopeguard-vert.vercel.app`; its Railway API is
+`https://scopeguard-api-production.up.railway.app`. Health, exact-origin CORS, reset, the complete
+synthetic block/approval/rollback workflow, audit integrity, and frontend reachability were
+verified after deployment. Durable PostgreSQL audit storage, production identity, rate limiting,
 and multi-replica coordination remain future work.

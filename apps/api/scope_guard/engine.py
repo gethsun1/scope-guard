@@ -1,4 +1,6 @@
 import asyncio
+import hashlib
+import json
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from typing import Any
@@ -31,7 +33,45 @@ class Runner:
             return value
 
 
-runner: Runner = Runner()
+class HostedDemoRunner(Runner):
+    """Synthetic hosted state machine with no shell, filesystem, or Docker access."""
+
+    def __init__(self) -> None:
+        self.rd: dict[str, Any] = {}
+        self.engage: dict[str, Any] = {}
+        self.snapshot: dict[str, Any] | None = None
+        self._reset()
+
+    def _reset(self) -> None:
+        self.rd = {"healthy": True, "release": 1, "migration": 0}
+        self.engage = {"healthy": True, "release": 1, "migration": 0}
+        self.snapshot = None
+
+    @staticmethod
+    def _digest(value: dict[str, Any]) -> str:
+        return hashlib.sha256(json.dumps(value, sort_keys=True).encode()).hexdigest()
+
+    async def execute(self, operation: str) -> dict[str, Any]:
+        if operation == "reset":
+            self._reset()
+        elif operation == "snapshot":
+            self.snapshot = dict(self.rd)
+        elif operation == "deploy_rdsocial":
+            self.rd["release"] += 1
+        elif operation == "migrate_rdsocial":
+            self.rd["migration"] += 1
+        elif operation == "fail_rdsocial":
+            self.rd["healthy"] = False
+        elif operation == "rollback_rdsocial" and self.snapshot:
+            self.rd = dict(self.snapshot)
+        elif operation not in {"snapshot"}:
+            raise ValueError("unknown hosted demo operation")
+        return {"ok": True, "rdsocial_hash": self._digest(self.rd),
+                "engageflow_hash": self._digest(self.engage), "rdsocial": dict(self.rd),
+                "engageflow": dict(self.engage)}
+
+
+runner: Runner = HostedDemoRunner() if settings().demo_runner_url == "inmemory://" else Runner()
 
 
 @dataclass
