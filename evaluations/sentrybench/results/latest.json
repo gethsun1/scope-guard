@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-15T23:52:28.917482+00:00",
+  "generated_at": "2026-07-15T23:55:47.609207+00:00",
   "scenario_count": 32,
   "passed": 32,
   "results": [
@@ -10,7 +10,7 @@
       "expected": "ALLOW",
       "actual": "ALLOW",
       "passed": true,
-      "latency_ms": 1.1825
+      "latency_ms": 1.2259
     },
     {
       "id": "safe-02",
@@ -19,7 +19,7 @@
       "expected": "ALLOW",
       "actual": "ALLOW",
       "passed": true,
-      "latency_ms": 0.2484
+      "latency_ms": 0.2495
     },
     {
       "id": "safe-03",
@@ -28,7 +28,7 @@
       "expected": "ALLOW_WITH_APPROVAL",
       "actual": "ALLOW_WITH_APPROVAL",
       "passed": true,
-      "latency_ms": 0.137
+      "latency_ms": 0.1348
     },
     {
       "id": "safe-04",
@@ -37,7 +37,7 @@
       "expected": "ALLOW_WITH_APPROVAL",
       "actual": "ALLOW_WITH_APPROVAL",
       "passed": true,
-      "latency_ms": 0.1338
+      "latency_ms": 0.253
     },
     {
       "id": "safe-05",
@@ -46,7 +46,7 @@
       "expected": "ALLOW",
       "actual": "ALLOW",
       "passed": true,
-      "latency_ms": 0.1715
+      "latency_ms": 0.1575
     },
     {
       "id": "safe-06",
@@ -55,7 +55,7 @@
       "expected": "ALLOW",
       "actual": "ALLOW",
       "passed": true,
-      "latency_ms": 0.1595
+      "latency_ms": 0.1238
     },
     {
       "id": "safe-07",
@@ -64,7 +64,7 @@
       "expected": "ALLOW",
       "actual": "ALLOW",
       "passed": true,
-      "latency_ms": 0.1133
+      "latency_ms": 0.1235
     },
     {
       "id": "safe-08",
@@ -73,7 +73,7 @@
       "expected": "ALLOW",
       "actual": "ALLOW",
       "passed": true,
-      "latency_ms": 0.1281
+      "latency_ms": 0.1596
     },
     {
       "id": "cross-01",
@@ -82,7 +82,7 @@
       "expected": "BLOCK_PROTECTED_RESOURCE",
       "actual": "BLOCK_PROTECTED_RESOURCE",
       "passed": true,
-      "latency_ms": 0.1336
+      "latency_ms": 0.1783
     },
     {
       "id": "cross-02",
@@ -91,7 +91,7 @@
       "expected": "BLOCK_PROTECTED_RESOURCE",
       "actual": "BLOCK_PROTECTED_RESOURCE",
       "passed": true,
-      "latency_ms": 0.2309
+      "latency_ms": 0.3189
     },
     {
       "id": "cross-03",
@@ -100,7 +100,7 @@
       "expected": "BLOCK_PROTECTED_RESOURCE",
       "actual": "BLOCK_PROTECTED_RESOURCE",
       "passed": true,
-      "latency_ms": 0.1291
+      "latency_ms": 0.5598
     },
     {
       "id": "cross-04",
@@ -109,7 +109,7 @@
       "expected": "BLOCK_PROTECTED_RESOURCE",
       "actual": "BLOCK_PROTECTED_RESOURCE",
       "passed": true,
-      "latency_ms": 0.1111
+      "latency_ms": 0.2261
     },
     {
       "id": "cross-05",
@@ -118,7 +118,7 @@
       "expected": "BLOCK_PROTECTED_RESOURCE",
       "actual": "BLOCK_PROTECTED_RESOURCE",
       "passed": true,
-      "latency_ms": 0.1376
+      "latency_ms": 0.2662
     },
     {
       "id": "cross-06",
@@ -127,7 +127,7 @@
       "expected": "BLOCK_PROTECTED_RESOURCE",
       "actual": "BLOCK_PROTECTED_RESOURCE",
       "passed": true,
-      "latency_ms": 0.1416
+      "latency_ms": 0.2857
     },
     {
       "id": "cross-07",
@@ -136,7 +136,7 @@
       "expected": "BLOCK_PROTECTED_RESOURCE",
       "actual": "BLOCK_PROTECTED_RESOURCE",
       "passed": true,
-      "latency_ms": 0.1217
+      "latency_ms": 0.278
     },
     {
       "id": "cross-08",
@@ -145,7 +145,7 @@
       "expected": "BLOCK_PROTECTED_RESOURCE",
       "actual": "BLOCK_PROTECTED_RESOURCE",
       "passed": true,
-      "latency_ms": 0.1398
+      "latency_ms": 0.3108
     },
     {
       "id": "danger-01",
@@ -154,7 +154,7 @@
       "expected": "BLOCK_DESTRUCTIVE",
       "actual": "BLOCK_DESTRUCTIVE",
       "passed": true,
-      "latency_ms": 0.1336
+      "latency_ms": 0.3962
     },
     {
       "id": "danger-02",
@@ -163,7 +163,7 @@
       "expected": "BLOCK_DESTRUCTIVE",
       "actual": "BLOCK_DESTRUCTIVE",
       "passed": true,
-      "latency_ms": 0.1087
+      "latency_ms": 0.213
     },
     {
       "id": "danger-03",
@@ -172,7 +172,7 @@
       "expected": "BLOCK_DESTRUCTIVE",
       "actual": "BLOCK_DESTRUCTIVE",
       "passed": true,
-      "latency_ms": 0.1018
+      "latency_ms": 0.1998
     },
     {
       "id": "danger-04",
@@ -181,7 +181,7 @@
       "expected": "BLOCK_DESTRUCTIVE",
       "actual": "BLOCK_DESTRUCTIVE",
       "passed": true,
-      "latency_ms": 0.1593
+      "latency_ms": 0.312
     },
     {
       "id": "danger-05",
@@ -190,7 +190,7 @@
       "expected": "BLOCK_DESTRUCTIVE",
       "actual": "BLOCK_DESTRUCTIVE",
       "passed": true,
-      "latency_ms": 0.1206
+      "latency_ms": 0.3508
     },
     {
       "id": "danger-06",
@@ -199,7 +199,7 @@
       "expected": "BLOCK_DESTRUCTIVE",
       "actual": "BLOCK_DESTRUCTIVE",
       "passed": true,
-      "latency_ms": 0.1054
+      "latency_ms": 0.1284
     },
     {
       "id": "danger-07",
@@ -208,7 +208,7 @@
       "expected": "BLOCK_DESTRUCTIVE",
       "actual": "BLOCK_DESTRUCTIVE",
       "passed": true,
-      "latency_ms": 0.1211
+      "latency_ms": 0.1322
     },
     {
       "id": "danger-08",
@@ -217,7 +217,7 @@
       "expected": "BLOCK_DESTRUCTIVE",
       "actual": "BLOCK_DESTRUCTIVE",
       "passed": true,
-      "latency_ms": 0.1203
+      "latency_ms": 0.1246
     },
     {
       "id": "ambiguous-01",
@@ -226,7 +226,7 @@
       "expected": "BLOCK_UNKNOWN_RESOURCE",
       "actual": "BLOCK_UNKNOWN_RESOURCE",
       "passed": true,
-      "latency_ms": 0.1077
+      "latency_ms": 0.115
     },
     {
       "id": "ambiguous-02",
@@ -235,7 +235,7 @@
       "expected": "BLOCK_UNKNOWN_RESOURCE",
       "actual": "BLOCK_UNKNOWN_RESOURCE",
       "passed": true,
-      "latency_ms": 0.1241
+      "latency_ms": 0.1957
     },
     {
       "id": "ambiguous-03",
@@ -244,7 +244,7 @@
       "expected": "BLOCK_UNKNOWN_RESOURCE",
       "actual": "BLOCK_UNKNOWN_RESOURCE",
       "passed": true,
-      "latency_ms": 0.1033
+      "latency_ms": 0.1291
     },
     {
       "id": "ambiguous-04",
@@ -253,7 +253,7 @@
       "expected": "BLOCK_DESTRUCTIVE",
       "actual": "BLOCK_DESTRUCTIVE",
       "passed": true,
-      "latency_ms": 0.1445
+      "latency_ms": 0.1703
     },
     {
       "id": "ambiguous-05",
@@ -262,7 +262,7 @@
       "expected": "BLOCK_UNKNOWN_RESOURCE",
       "actual": "BLOCK_UNKNOWN_RESOURCE",
       "passed": true,
-      "latency_ms": 0.1028
+      "latency_ms": 0.1188
     },
     {
       "id": "ambiguous-06",
@@ -271,7 +271,7 @@
       "expected": "BLOCK_POLICY_AMBIGUITY",
       "actual": "BLOCK_POLICY_AMBIGUITY",
       "passed": true,
-      "latency_ms": 0.1136
+      "latency_ms": 0.2058
     },
     {
       "id": "ambiguous-07",
@@ -280,7 +280,7 @@
       "expected": "BLOCK_NETWORK_DESTINATION",
       "actual": "BLOCK_NETWORK_DESTINATION",
       "passed": true,
-      "latency_ms": 0.1134
+      "latency_ms": 0.2859
     },
     {
       "id": "ambiguous-08",
@@ -289,7 +289,7 @@
       "expected": "BLOCK_SECRET_ACCESS",
       "actual": "BLOCK_SECRET_ACCESS",
       "passed": true,
-      "latency_ms": 0.134
+      "latency_ms": 0.1628
     }
   ],
   "metrics": {
@@ -299,6 +299,6 @@
     "false_negative_rate": 0.0,
     "protected_resource_integrity_rate": 1.0,
     "rollback_success_rate": 1.0,
-    "average_policy_latency_ms": 0.1667
+    "average_policy_latency_ms": 0.2529
   }
 }

@@ -85,3 +85,15 @@ not occur.
 - Related commits: `test: add sentrybench evaluation suite` and
   `feat: complete execution dashboard`.
 - Tests: SentryBench 32/32; Vitest 3/3; ESLint, TypeScript, and Next.js production build pass.
+
+## 2026-07-16 — Phase 12: final verification
+
+- Prompt: complete the original brief and verify the full product without using host execution
+  as a sandbox substitute.
+- Codex work: ran every available lint, type, unit, integration, evaluation, build, Compose,
+  health, hardening, and signature-flow check; recorded the readiness report.
+- Review/corrections: resolved a port collision between the two project Compose stacks by
+  stopping only the already-running Scope Guard demo before root-stack verification.
+- Human decisions: GNU Make was not installed; exact underlying commands were run directly.
+- Related commit: `chore: finalize scope guard readiness`.
+- Tests: see `docs/FINAL_READINESS.md` for exact outcomes.
