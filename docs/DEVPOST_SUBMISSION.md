@@ -35,7 +35,8 @@ Docker Compose, SHA-256 audit chaining, Pytest, Vitest, Playwright, and SentryBe
 The optional `gpt_live` planner uses strict structured output for intent, resource boundaries,
 risk, validation, rollback, and confidence. Pydantic validates every result and ambiguity fails
 closed. The credential-free submission demo uses visibly labeled `gpt_demo`. The live GPT smoke
-was not run in this environment because `OPENAI_API_KEY` was unavailable.
+was attempted with a developer-supplied local credential, but OpenAI returned `insufficient_quota`;
+no live structured plan was produced. The credential was never committed or deployed.
 
 ## How Codex was used
 
@@ -68,14 +69,17 @@ and separately isolated hosted runners.
 
 ## Repository, testing, installation, and platforms
 
-Repository: `https://github.com/gethsun1/scope-guard`. Follow the root README. Supported development platforms are
+Repository: `https://github.com/gethsun1/scope-guard`. Follow the root README or run
+`./scripts/verify-clean-clone.sh`. Supported development platforms are
 Linux and WSL2 with Docker Compose v2, Python 3.11+, uv, Node 20+, and pnpm 11. Run Ruff, MyPy,
 Pytest, Vitest, ESLint, TypeScript, Next.js build, Compose validation, and SentryBench using the
-documented commands. GNU Make is optional.
+documented commands. The script checks prerequisites, installs only project dependencies, and
+runs non-destructive validation. GNU Make is optional. The signature demo itself requires Docker
+Compose and uses only the synthetic RD Social and EngageFlow fixtures.
 
 ## Hosted demo and video
 
 Live demo: `https://scopeguard-vert.vercel.app`. Video: `YOUTUBE_DEMO_URL`. The public configuration must remain
 synthetic, resettable, and disconnected from production infrastructure.
 
-Codex feedback session: `019f67d2-37b1-7a41-b333-bb2175778f6d`.
+Codex feedback session: `CODEX_FEEDBACK_SESSION_ID`.

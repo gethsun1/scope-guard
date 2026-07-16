@@ -5,7 +5,7 @@ Target runtime: **2:45**, hard stop at 2:50.
 ## Before recording
 
 - Local URLs: `http://localhost:3000`, API health `http://localhost:8000/health`.
-- Hosted URL: `LIVE_DEMO_URL` after the developer supplies and verifies it.
+- Hosted URL: `https://scopeguard-vert.vercel.app`.
 - Use `DEMO_MODE=true`, `CODEX_PROVIDER=demo`, the isolated Docker Compose environment, and no
   production credentials or infrastructure.
 - Reset with `docker compose -f demo/docker-compose.demo.yml down -v --remove-orphans`, then
@@ -32,6 +32,11 @@ Target runtime: **2:45**, hard stop at 2:50.
 
 Expected evidence: one protected block, same-workflow correction, one human approval, one target
 failure, successful RD Social rollback, and unchanged EngageFlow hash and health.
+
+Say the labels exactly: “GPT-5.6 · DEMO” interprets the boundary, “Codex · DEMO” proposes the
+signature actions, deterministic policy blocks or approval-gates them, and the Docker runner alone
+mutates the synthetic target. The deliberate failure is RD Social health; the expected corrected
+action is the `rdsocial-api` restart; rollback restores RD Social while EngageFlow stays unchanged.
 
 ## Backup plan
 

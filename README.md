@@ -90,6 +90,8 @@ network. Neither `/`, SSH material, nor `/var/run/docker.sock` is mounted.
 
 ## Requirements
 
+- Supported development systems: Linux and WSL2. macOS may work with Docker Desktop but is not
+  part of the verified matrix; Windows should use WSL2.
 - Docker Desktop/Engine with Compose v2+
 - Python 3.11+ and [uv](https://docs.astral.sh/uv/)
 - Node.js 20+ and pnpm 11+
@@ -167,6 +169,14 @@ pnpm build
 docker compose -f demo/docker-compose.demo.yml config --quiet
 ```
 
+For a fresh-clone, non-destructive prerequisite/install/test pass, run
+`./scripts/verify-clean-clone.sh`. It never installs system packages, starts containers, removes
+volumes, or reads secrets. To verify the hosted synthetic workflow, set `FRONTEND_URL`, `API_URL`,
+and `DEMO_API_TOKEN`, then run `./scripts/verify-hosted-demo.sh`; the token is never printed.
+
+Download a task report from the Execution screen, or request
+`GET /api/tasks/{task_id}/report?format=json` (use `format=md` for Markdown).
+
 With GNU Make installed: `make test`, `make lint`, `make typecheck`, `make e2e`, `make eval`,
 `make build`, or `make verify`.
 
@@ -183,7 +193,8 @@ unprivileged container host. See [deployment guidance](docs/DEPLOYMENT.md).
 
 - Inventory is registered synthetic data, not host discovery.
 - Task state is process-local; SQLite/PostgreSQL persistence is the next production step.
-- Live providers are opt-in; the GPT-5.6 smoke has not been run without a developer credential.
+- Live providers are opt-in; the GPT-5.6 request reached OpenAI but did not pass because the
+  account returned `insufficient_quota`. See `docs/LIVE_PROVIDER_VERIFICATION.md`.
 - Shell analysis intentionally supports a constrained subset; execution is predefined only.
 - Local demo authentication is not enterprise identity.
 
