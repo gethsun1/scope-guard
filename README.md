@@ -3,14 +3,37 @@
 > **Let coding agents move fast—without letting them wander.**
 
 Scope Guard, internally codenamed **Codex Sentry**, is an intent-bound execution control
-plane for coding agents. It lets a model interpret a task and propose a plan, but places a
-deterministic policy engine between every proposed action and an isolated runner.
+plane for coding agents. It lets a structured planner interpret a task and propose a boundary,
+while a deterministic policy engine stands between every proposed action and the isolated
+execution runner.
 
-Live demo: [scopeguard-vert.vercel.app](https://scopeguard-vert.vercel.app). Its API uses a
-synthetic in-memory state machine with no shell or Docker access. The complete writable sandbox
-remains intentionally local and Docker-based.
+Live demo: [scopeguard-vert.vercel.app](https://scopeguard-vert.vercel.app). It needs no
+judge-supplied API credentials, is disconnected from production infrastructure, and uses a safe,
+resettable synthetic environment. The complete writable Docker sandbox remains local by design.
 
 ![Scope Guard dashboard](docs/assets/dashboard.png)
+
+## Judge quick start
+
+- **Public demo:** [scopeguard-vert.vercel.app](https://scopeguard-vert.vercel.app)
+- **Repository:** [github.com/gethsun1/scope-guard](https://github.com/gethsun1/scope-guard)
+- **Safety profile:** no production infrastructure is connected. The hosted demo is deterministic,
+  resettable, and requires no API key; the local version uses the complete writable Docker sandbox.
+
+Fastest path through the deployed application:
+
+1. Open **Guarded task** and use the seeded RD Social instruction.
+2. Review and approve the proposed boundary.
+3. Open **Execution** and start execution.
+4. Inspect the blocked EngageFlow action.
+5. Approve the corrected RD Social action.
+6. Observe failure injection, target-only rollback, and protected-resource integrity.
+7. Review or download the report.
+8. Open **SentryBench** to inspect the generated policy results.
+
+The public demo and local writable sandbox intentionally have different safety profiles. For the
+real containerized runner, use the [complete local Docker instructions](#run-locally) and the
+[local end-to-end verification notes](docs/LOCAL_END_TO_END_VERIFICATION.md).
 
 ## The problem
 
@@ -21,11 +44,15 @@ Scope Guard also asks whether the action belongs to the approved task and projec
 
 ## Thirty-second explanation
 
-1. GPT-5.6 interprets natural-language intent and proposes a typed boundary.
-2. A person approves the target, protected resources, validation, and rollback plan.
-3. Codex proposes actions. A deterministic engine parses and evaluates every action.
-4. Allowed actions run through a predefined-operation Docker runner; protected actions stop.
-5. Target health, protected integrity, rollback, and a hash-chained audit report provide proof.
+1. A structured planner interprets natural-language intent and proposes a typed boundary. Live
+   mode uses GPT-5.6; the public sandbox uses a clearly labeled deterministic provider with the
+   same validated schema.
+2. A person approves the target, protected resources, validation plan, and rollback plan.
+3. Codex proposes actions, and a deterministic engine parses and evaluates every proposed operation.
+4. Allowed actions run through the isolated predefined-operation runner; protected actions are
+   blocked before execution.
+5. Target health checks, protected-resource integrity, rollback, and a hash-chained audit report
+   provide evidence of the result.
 
 ## Signature scenario
 
@@ -57,7 +84,7 @@ the same hash and health state.
 flowchart LR
   U[Developer] --> W[Next.js control plane]
   W --> A[FastAPI orchestrator]
-  A --> P[GPT-5.6 planner]
+  A --> P[Planner: GPT-5.6 live or deterministic demo]
   A --> C[Codex adapter]
   C --> E[Deterministic policy engine]
   E -->|allow / approval| R[Predefined Docker runner]
@@ -67,19 +94,73 @@ flowchart LR
   A --> AU[Hash-chained audit]
 ```
 
+This diagram represents the complete local execution topology. The hosted demo replaces the
+writable Docker runner with a synthetic in-memory state machine that has no shell or Docker access.
+
 Details: [architecture](docs/ARCHITECTURE.md) and [threat model](docs/THREAT_MODEL.md).
 
 ### Responsibility split
 
-**GPT-5.6** interprets intent, proposes resources, explains risk, and drafts validation and
-rollback plans. Its strict JSON is validated and never grants authority.
+**GPT-5.6** interprets intent, proposes a typed boundary, explains risk, and drafts validation and
+rollback plans. Its strict JSON is validated, but it never grants authority.
 
-**Codex** accelerated development and can collaborate through proposed actions, receive
-structured policy rejection, and continue in the same thread. `codex_demo` is deterministic;
-the proposal-only `codex_live` smoke path was exercised locally, but it is not the default.
+**Codex** accelerated implementation and can propose development actions, receive structured
+policy rejection, revise an action, and continue the guarded workflow. `codex_demo` is the
+reproducible deterministic event provider. `codex_live` is the read-only app-server adapter; its
+manual smoke test verified startup, schema validation, four typed proposals, and thread capture.
+That smoke was proposal-only: it did not run the Docker workflow or execute a corrected action set.
 
-**The policy engine** is final authority. It parses commands, extracts resources, detects
-danger, matches the approved manifest, denies unknowns, and produces deterministic decisions.
+**The deterministic policy engine** is final authority. It parses actions, extracts resources,
+matches the approved manifest, denies unknown resources, detects destructive and protected
+operations, and determines allow, approval, or block outcomes. It overrides any conflicting model
+recommendation.
+
+## How I used Codex and GPT-5.6
+
+### Codex
+
+I built Scope Guard primarily through one Codex IDE session. Codex accelerated the monorepo
+scaffolding; FastAPI and Next.js implementation; typed domain models; command parsing and
+deterministic policy enforcement; Docker fixtures; block, correction, approval, validation, and
+rollback workflows; audit and reporting; frontend work; backend and frontend tests; Playwright
+verification; SentryBench; WSL and Docker troubleshooting; deployment preparation; and the final
+documentation and submission evidence.
+
+I reviewed the output and retained responsibility for the product and trust-boundary decisions.
+The Codex `/feedback` session ID is supplied privately in the Devpost form and is intentionally not
+published in this repository.
+
+### GPT-5.6
+
+Scope Guard implements a GPT-5.6 Responses API planner adapter. It converts a natural-language
+task, infrastructure inventory, resource relationships, constraints, and supported operations into
+schema-validated structured output containing:
+
+- interpreted intent and target project
+- allowed and protected resources
+- proposed actions and a risk summary
+- validation and rollback plans
+- confidence and open questions
+
+GPT-5.6 does not authorize actions. Malformed output fails schema validation, model output cannot
+silently expand an approved manifest, and the deterministic policy engine has final authority. The
+public demo uses a deterministic planner that implements the same validated schema.
+
+The repository records GPT-5.6 as the implemented live planner, but it does not independently record
+the underlying model configuration of the primary Codex development session. I therefore do not
+claim here that GPT-5.6 powered that session.
+
+### Decisions I retained as the developer
+
+I chose to focus on semantic scope drift rather than generic shell access. I kept model reasoning
+outside the enforcement boundary, gave deterministic policy final authority, denied unknown
+resources by default, and required approval for medium- and high-risk mutations. I also chose
+synthetic infrastructure, independent protected-project validation, predefined operations,
+target-specific rollback, and a safe, reproducible hosted demo rather than connecting the project
+to production systems.
+
+The build history and rationale are documented in the [Codex collaboration history](docs/CODEX_COLLABORATION.md)
+and [product decisions](docs/PRODUCT_DECISIONS.md).
 
 ## Security model
 
@@ -124,7 +205,7 @@ demo authentication and must be changed or replaced for a hosted environment.
 ## Demo
 
 1. Open **Guarded task** and interpret the seeded instruction.
-2. Review and approve the GPT-5.6 demo manifest.
+2. Review and approve the deterministic demo manifest.
 3. Open **Execution**, start execution, and inspect the blocked EngageFlow action.
 4. Approve the corrected RD Social restart.
 5. Observe failed target health, rollback, protected integrity, and download the report.
@@ -204,8 +285,12 @@ unprivileged container host. See [deployment guidance](docs/DEPLOYMENT.md).
 
 - Inventory is registered synthetic data, not host discovery.
 - Task state is process-local; SQLite/PostgreSQL persistence is the next production step.
-- Live providers are opt-in; the GPT-5.6 request reached OpenAI but did not pass because the
-  account returned `insufficient_quota`. See `docs/LIVE_PROVIDER_VERIFICATION.md`.
+- The public deployment intentionally uses the deterministic planner for reliability and does not
+  require judge-supplied credentials.
+- The GPT-5.6 Responses API adapter is implemented, schema-validated, and available through
+  configuration. The final API-account smoke request reached OpenAI but could not complete because
+  that API account returned `insufficient_quota`; the result and its limits are documented in
+  [live provider verification](docs/LIVE_PROVIDER_VERIFICATION.md).
 - Shell analysis intentionally supports a constrained subset; execution is predefined only.
 - Local demo authentication is not enterprise identity.
 
